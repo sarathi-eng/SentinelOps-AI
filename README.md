@@ -61,7 +61,7 @@ Full autonomous lifecycle tracking from detection to remediation strategy.
 ### 2. Setup
 ```bash
 # Clone the repository
-git clone <repo-url>
+git clone https://github.com/sarathi-eng/SentinelOps-AI/
 cd sentinel-ops
 
 # Install dependencies
