@@ -31,32 +31,7 @@ Instead of manually triaging incidents, engineering teams receive:
 ## 🏗 Architecture
 SentinelOps AI leverages a modular, cloud-native architecture powered by Gemini on Google Cloud Vertex AI.
 
-```mermaid
-graph TD
-    subgraph "GitLab Environment"
-        GL[GitLab Project] -->|Webhooks| LW[Webhook Listener]
-    end
-
-    subgraph "SentinelOps Backend (Cloud Run)"
-        LW -->|Pipeline Event| FA[FastAPI Orchestrator]
-        FA -->|Context Gathering| GA[GitLab API]
-        GA -->|Logs/Commits| FA
-    end
-
-    subgraph "AI Intelligence Layer (Vertex AI)"
-        FA -->|Context Prompt| GE[Gemini 1.5 Flash]
-        GE -->|Analysis JSON| FA
-    end
-
-    subgraph "Operational Interface"
-        FA -->|Incident Data| DB[JSON/BigQuery Store]
-        DB -->|Polling| UI[Cinematic Dashboard]
-    end
-
-    subgraph "Autonomous Response"
-        FA -->|Remediation| ACT[GitLab Issue/Rollback]
-    end
-```
+![Architecture Diagram](assets/architecture.png)
 
 ---
 
