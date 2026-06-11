@@ -230,6 +230,7 @@
         let lastCount = 0;
         let lastMTTR = 0;
         let lastDowntime = 0;
+        let lastDataHash = "";
 
         async function fetchIncidents() {
             try {
@@ -237,6 +238,11 @@
                 const incidents = await response.json();
                 const container = document.getElementById('incidents-container');
                 
+                // Simple hash to detect changes
+                const currentDataHash = JSON.stringify(incidents);
+                if (currentDataHash === lastDataHash) return;
+                lastDataHash = currentDataHash;
+
                 if (incidents.length === 0) {
                     container.innerHTML = '<p>No incidents detected yet. Webhook listening on /webhook...</p>';
                     return;
@@ -258,7 +264,7 @@
                     lastCount = newCount;
                 }
 
-                container.innerHTML = incidents.reverse().map(incident => `
+                container.innerHTML = [...incidents].reverse().map(incident => `
                     <div class="incident-card">
                         <div class="incident-hero">
                             <div class="incident-badge-row">
