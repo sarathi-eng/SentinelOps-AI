@@ -64,10 +64,104 @@
         .stat-card p { margin: 0.5rem 0 0; font-size: 1.8rem; font-weight: 700; color: var(--primary); }
 
         .incident-list h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
-        .incident-list h2::before { content: ''; display: inline-block; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; }
+
+        .incident-card {
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .incident-hero {
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .incident-badge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-severity-high { background: #fee2e2; color: #991b1b; }
+        .badge-severity-medium { background: #fef3c7; color: #92400e; }
+        .badge-severity-low { background: #dcfce7; color: #166534; }
+
+        .confidence {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        .incident-title { margin: 0; font-size: 1.5rem; color: #1e293b; }
+        .incident-timestamp { font-size: 0.875rem; color: var(--secondary); margin-top: 0.25rem; }
+
+        .incident-body {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            padding: 1.5rem;
+            gap: 2rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            margin-top: 1.5rem;
+        }
+        .section-label:first-child { margin-top: 0; }
+
+        .section-content { font-size: 1rem; line-height: 1.5; }
+        .impact-box { color: #475569; }
+
+        .recommendation-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 1.25rem; border-radius: 12px; color: #1e40af; border-left: 6px solid var(--primary); font-weight: 500; box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05); }
+
+        .timeline {
+            border-left: 2px solid #e2e8f0;
+            padding-left: 1.5rem;
+            margin-left: 0.5rem;
+            position: relative;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1.85rem;
+            top: 0.25rem;
+            width: 10px;
+            height: 10px;
+            background: #cbd5e1;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .timeline-time { font-weight: 700; color: var(--primary); }
 
         .incident-card:hover { transform: translateY(-2px); transition: transform 0.2s ease-in-out; }
-        .recommendation-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 1.25rem; border-radius: 12px; color: #1e40af; border-left: 6px solid var(--primary); font-weight: 500; box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05); }
         
         /* Pulse for Active Investigations */
         .incident-list h2::before { 

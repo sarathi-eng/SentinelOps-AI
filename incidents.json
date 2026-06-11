@@ -1,0 +1,60 @@
+[
+  {
+    "pipeline_id": 12345,
+    "timestamp": "2026-06-11T07:00:28.703517",
+    "root_cause": "Database connection pool exhausted due to recent configuration change in commit a13f92.",
+    "severity": "High",
+    "business_impact": "Production database is unreachable. All write operations for the 'Checkout' service are currently failing.",
+    "recommendation": "Immediately rollback commit a13f92 and restore pool size to previous stable value (20).",
+    "confidence_score": 94,
+    "mttr_reduction_est": "78%",
+    "downtime_prevented_est": "42 minutes",
+    "timeline": [
+      {
+        "time": "T+0m",
+        "event": "Pipeline failure detected"
+      },
+      {
+        "time": "T+1m",
+        "event": "Logs and commit history analyzed"
+      },
+      {
+        "time": "T+2m",
+        "event": "Root cause identified: Pool exhaustion"
+      },
+      {
+        "time": "T+3m",
+        "event": "Remediation plan generated"
+      }
+    ]
+  },
+  {
+    "pipeline_id": 12345,
+    "timestamp": "2026-06-11T07:01:52.634362",
+    "root_cause": "Database connection pool exhausted due to recent configuration change in commit a13f92.",
+    "severity": "High",
+    "business_impact": "Production database is unreachable. All write operations for the 'Checkout' service are currently failing.",
+    "recommendation": "Immediately rollback commit a13f92 and restore pool size to previous stable value (20).",
+    "confidence_score": 94,
+    "mttr_reduction_est": "78%",
+    "downtime_prevented_est": "42 minutes",
+    "timeline": [
+      {
+        "time": "T+0m",
+        "event": "Pipeline failure detected"
+      },
+      {
+        "time": "T+1m",
+        "event": "Logs and commit history analyzed"
+      },
+      {
+        "time": "T+2m",
+        "event": "Root cause identified: Pool exhaustion"
+      },
+      {
+        "time": "T+3m",
+        "event": "Remediation plan generated"
+      }
+    ]
+  }
+]
