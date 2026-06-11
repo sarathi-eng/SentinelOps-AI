@@ -1,0 +1,18 @@
+# Secrets
+*-key.json
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+agent_venv/
+
+# Project Specific
+coding_tasks/
+outputs/
+
+# IDEs
+.vscode/
+.codex/
+.idea/

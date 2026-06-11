@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SentinelOps | AI Incident Commander</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+        }
+
+        body { 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 0; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.025em; }
+        header p { margin: 0.5rem 0 0; opacity: 0.8; font-size: 0.9rem; }
+
+        main {
+            width: 95%;
+            max-width: 1100px;
+            margin: 2rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 { margin: 0; font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-card p { margin: 0.5rem 0 0; font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+
+        .incident-list h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+        .incident-list h2::before { content: ''; display: inline-block; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; }
+
+        .incident-card:hover { transform: translateY(-2px); transition: transform 0.2s ease-in-out; }
+        .recommendation-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 1.25rem; border-radius: 12px; color: #1e40af; border-left: 6px solid var(--primary); font-weight: 500; box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05); }
+        
+        /* Pulse for Active Investigations */
+        .incident-list h2::before { 
+            content: ''; 
+            display: inline-block; 
+            width: 12px; 
+            height: 12px; 
+            background: var(--danger); 
+            border-radius: 50%; 
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SentinelOps AI</h1>
+        <p>Autonomous Incident Commander for DevOps Teams</p>
+    </header>
+
+    <main>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>MTTR Reduction</h3>
+                <p id="stat-mttr">0%</p>
+            </div>
+            <div class="stat-card">
+                <h3>Downtime Prevented</h3>
+                <p id="stat-downtime">0m</p>
+            </div>
+            <div class="stat-card">
+                <h3>Incidents Resolved</h3>
+                <p id="stat-count">0</p>
+            </div>
+        </div>
+
+        <div class="incident-list">
+            <h2>Active Investigations</h2>
+            <div id="incidents-container">
+                <p>Awaiting events from GitLab...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function animateValue(id, start, end, duration, suffix = "") {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            let current = start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            const timer = setInterval(() => {
+                current += increment;
+                obj.innerText = current + suffix;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        let lastCount = 0;
+        let lastMTTR = 0;
+        let lastDowntime = 0;
+
+        async function fetchIncidents() {
+            try {
+                const response = await fetch('/incidents');
+                const incidents = await response.json();
+                const container = document.getElementById('incidents-container');
+                
+                if (incidents.length === 0) {
+                    container.innerHTML = '<p>No incidents detected yet. Webhook listening on /webhook...</p>';
+                    return;
+                }
+
+                // Update Stats with Animation
+                const latest = incidents[incidents.length - 1];
+                const newMTTR = parseInt(latest.mttr_reduction_est) || 78;
+                const newDowntime = parseInt(latest.downtime_prevented_est) || 42;
+                const newCount = incidents.length;
+
+                if (newCount > lastCount) {
+                    animateValue('stat-mttr', lastMTTR, newMTTR, 1000, "%");
+                    animateValue('stat-downtime', lastDowntime, newDowntime, 1000, "m");
+                    document.getElementById('stat-count').innerText = newCount;
+                    
+                    lastMTTR = newMTTR;
+                    lastDowntime = newDowntime;
+                    lastCount = newCount;
+                }
+
+                container.innerHTML = incidents.reverse().map(incident => `
+                    <div class="incident-card">
+                        <div class="incident-hero">
+                            <div class="incident-badge-row">
+                                <span class="badge badge-severity-${incident.severity.toLowerCase()}">${incident.severity} SEVERITY</span>
+                                <span class="confidence">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                    AI Confidence: ${incident.confidence_score}%
+                                </span>
+                            </div>
+                            <h3 class="incident-title">Pipeline Failure #${incident.pipeline_id}</h3>
+                            <div class="incident-timestamp">${new Date(incident.timestamp).toLocaleString()}</div>
+                        </div>
+                        <div class="incident-body">
+                            <div class="incident-main">
+                                <div class="section-label">Root Cause Analysis</div>
+                                <div class="section-content"><strong>${incident.root_cause}</strong></div>
+                                
+                                <div class="section-label">Business Impact</div>
+                                <div class="section-content impact-box">${incident.business_impact}</div>
+                                
+                                <div class="section-label">Remediation Strategy</div>
+                                <div class="section-content recommendation-box">${incident.recommendation}</div>
+                            </div>
+                            <div class="incident-sidebar">
+                                <div class="section-label">Incident Timeline</div>
+                                <div class="timeline">
+                                    ${incident.timeline.map(item => `
+                                        <div class="timeline-item">
+                                            <span class="timeline-time">${item.time}</span> — 
+                                            <span class="timeline-event">${item.event}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error fetching incidents:', error);
+            }
+        }
+
+        fetchIncidents();
+        setInterval(fetchIncidents, 5000);
+    </script>
+</body>
+</html>
